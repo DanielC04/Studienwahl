@@ -1,0 +1,148 @@
+[
+	{
+		"name": "TU Dresden",
+		"categories": {
+			"Stadt": {
+				"Distanz zu Erfurt": 216,
+				"Zeit im Auto": 150,
+				"Zeit im Zug": 130,
+				"Distanz zu Halle": 150,
+				"Distanz zu München": 460,
+				"Einwohner": 550000,
+				"Studenten in der Stadt": 45000,
+				"Anzahl der Clubs in der Stadt": 20,
+				"Durchschnittliche Miete in der Stadt": 264,
+				"Mobilität in der Stadt": 0.42,
+				"Lebenserhaltungskosten": 709 
+			},
+			"Standort": {
+				"Studentenkultur und -Angebot": 10,
+				"Nebenjob": 10,
+				"Schon Bekannte/Freunde in der Stadt": 0.7
+			},
+			"uni": {
+				"Uniranking": 10,
+				"Internationale Studenten in %": 10,
+				"Weibliche Studenten in %": 10,
+				"Studenten pro Professor": 10,
+				"Studiengänge": 10,
+				"Campus ist schön": 10,
+				"Finanzielle Unterstzützung für Projekte": 10,
+				"Forschungsprojekte": 10,
+				"Anzahl der Studenten": 10,
+				"Angebot an Studienfächern": 10,
+				"Möglichkeiten für Engineering": 10
+			}
+		}
+	},
+	{
+		"name": "HPI Potsdam",
+		"categories": {
+			"Stadt": {
+				"Distanz zu Erfurt": 10,
+				"Zeit im Auto": 10,
+				"Zeit im Zug": 10,
+				"Distanz zu Halle": 10,
+				"Distanz zu München": 10,
+				"Einwohner": 10,
+				"Studenten in der Stadt": 10,
+				"Anzahl der Clubs in der Stadt": 10,
+				"Durchschnittliche Miete in der Stadt": 10,
+				"Mobilität in der Stadt": 41,
+				"Lebenserhaltungskosten": 10
+			},
+			"Standort": {
+				"Studentenkultur und -Angebot": 10,
+				"Nebenjob": 10,
+				"Schon Bekannte/Freunde in der Stadt": 10
+			},
+			"uni": {
+				"Uniranking": 18,
+				"Internationale Studenten in %": 10,
+				"Weibliche Studenten in %": 10,
+				"Studenten pro Professor": 60,
+				"Studiengänge, die mich interessieren": 7,
+				"Campus ist schön": 10,
+				"Finanzielle Unterstzützung für Projekte": 10,
+				"Forschungsprojekte": 10,
+				"Anzahl der Studenten": 10,
+				"Angebot an Studienfächern": 10,
+				"Möglichkeiten für Engineering": 10
+			}
+		}
+	},
+	{
+		"name": "TU München",
+		"categories": {
+			"Stadt": {
+				"Distanz zu Erfurt": 10,
+				"Zeit im Auto": 10,
+				"Zeit im Zug": 10,
+				"Distanz zu Halle": 10,
+				"Distanz zu München": 10,
+				"Einwohner": 10,
+				"Studenten in der Stadt": 10,
+				"Anzahl der Clubs in der Stadt": 10,
+				"Durchschnittliche Miete in der Stadt": 10,
+				"Mobilität in der Stadt": 10,
+				"Lebenserhaltungskosten": 10
+			},
+			"Standort": {
+				"Studentenkultur und -Angebot": 10,
+				"Nebenjob": 10,
+				"Schon Bekannte/Freunde in der Stadt": 10
+			},
+			"uni": {
+				"Uniranking": 10,
+				"Internationale Studenten in %": 10,
+				"Weibliche Studenten in %": 10,
+				"Studenten pro Professor": 10,
+				"Studiengänge": 10,
+				"Campus ist schön": 10,
+				"Finanzielle Unterstzützung für Projekte": 10,
+				"Forschungsprojekte": 10,
+				"Anzahl der Studenten": 10,
+				"Angebot an Studienfächern": 10,
+				"Möglichkeiten für Engineering": 10
+			}
+		}
+	},
+	{
+		"name": "KIT Karlsruhe",
+		"categories": {
+			"Stadt": {
+				"Distanz zu Erfurt": 10,
+				"Zeit im Auto": 10,
+				"Zeit im Zug": 10,
+				"Distanz zu Halle": 10,
+				"Distanz zu München": 10,
+				"Einwohner": 10,
+				"Studenten in der Stadt": 10,
+				"Anzahl der Clubs in der Stadt": 10,
+				"Durchschnittliche Miete in der Stadt": 10,
+				"Mobilität in der Stadt": 10,
+				"Lebenserhaltungskosten": 10
+			},
+			"Standort": {
+				"Studentenkultur und -Angebot": 10,
+				"Nebenjob": 10,
+				"Schon Bekannte/Freunde in der Stadt": 10
+			},
+			"uni": {
+				"Uniranking": 10,
+				"Internationale Studenten in %": 10,
+				"Weibliche Studenten in %": 10,
+				"Studenten pro Professor": 10,
+				"Studiengänge": 10,
+				"Campus ist schön": 10,
+				"Finanzielle Unterstzützung für Projekte": 10,
+				"Forschungsprojekte": 10,
+				"Anzahl der Studenten": 10,
+				"Angebot an Studienfächern": 10,
+				"Möglichkeiten für Engineering": 10
+			}
+		}
+	}
+
+
+]
