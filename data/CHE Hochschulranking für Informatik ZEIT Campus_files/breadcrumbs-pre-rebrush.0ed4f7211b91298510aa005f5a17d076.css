@@ -1,0 +1,1 @@
+.breadcrumbs{padding-left:var(--z-gap);padding-right:var(--z-gap);border-bottom:1px solid var(--z-border-footer)}.breadcrumbs__list{list-style-type:none;margin:0 auto;max-width:41.25rem;padding:.625rem 0}.breadcrumbs__item{display:inline;margin:0;padding:0}.breadcrumbs__item:not(:last-child):after{content:" › ";margin:0 .5em}
