@@ -14,12 +14,15 @@ University.initialize_driver()
 
 
 if USE_CASH:
-    allUniversities = load_cashed_university_list()
+    all_universities = load_cashed_university_list()
 else:
-    allUniversities = University.get_list_of_all_universities()
-    save_university_list(allUniversities)
+    all_universities = University.get_list_of_all_universities()
+    for university in all_universities:
+        university.fetch_info_from_zeit()
 
-allUniversities[0].fetch_info_from_zeit()
+    save_university_list(all_universities)
 
+
+print(all_universities)
 
 University.destroy_driver()

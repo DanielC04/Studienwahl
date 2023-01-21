@@ -1,5 +1,19 @@
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+import json
+
+@dataclass_json
+@dataclass
 class Criteria:
 	allCriterias = []
+	criteria_name: str
+	super_category: str
+	importance: int
+	score: int
+	worstScore: int
+	bestScore: int
+	totalAverage: int
+
 
 	def __init__(self, criteria_name, university_name, importance, super_category='general') -> None:
 		self.criteria_name = criteria_name
@@ -42,3 +56,6 @@ class Criteria:
 
 	def __repr__(self) -> str:
 		return f'{self.score} ({self.worstScore} - {self.bestScore})'
+
+	def toJson(self):
+		return json.dumps(self, default=lambda o: o.__dict__, sort_key=True, indent=4)
