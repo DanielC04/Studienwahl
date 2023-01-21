@@ -31,6 +31,3 @@ class DistanceToErfurt(Criteria):
 if __name__ == '__main__':
 	DistanceToErfurt('HPI', 10, 'driving')
 	# DistanceToErfurt('HPI Potsdam')
-
-
-

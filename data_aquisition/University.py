@@ -1,14 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+from data_aquisition.Criteria import Criteria
 
 DRIVER_PATH = '/snap/bin/chromium.chromedriver'
 
 
+@dataclass
+@dataclass_json
 class University:
     criterias = []
     driver = None
     USE_HEADLESS = False
+    name: str
+    # data: list[]
+    zeitOnlineLink: str
 
     def __init__(self, name, zeitOnlineLink='') -> None:
         self.initialize_driver()
@@ -27,21 +34,41 @@ class University:
         for criteria in self.data:
             totalScore += criteria.getNormalizedScore()
 
-
     def fetch_info_from_zeit(self):
         d = self.driver
-        print(self.zeitOnlineLink)
+        # equivalent of clicking the 'accept-ads-button' by setting the needed coockie
+        d.get('https://www.zeit.de/gesellschaft/zeitgeschehen/2023-01/elon-musk-tesla-aktie-gericht-verfahren')
+        d.add_cookie(
+            {'name': 'zonconsent', 'value': '2023-01-21T02:31:29.903Z'})
         d.get(url=self.zeitOnlineLink)
-        # get 'Studierende insgesamt'
-        info = d.find_element(By.XPATH, '*[text()="Studierende insgesamt"')
-        print(info)
+
+        #
+        # Criteria:'Studenten insgesamt'
+        #
+        self.criterias.append(Criteria(
+            'Studenten insgesamt', self.name, importance=5, super_category='Universität'))
+        self.criterias[-1].bestScore = 100
+        self.criterias[-1].worstScore = 10_000
+        student_count_as_string = d.find_element(By.CSS_SELECTOR, 'td.checol2_rank').text
+        student_count = int(student_count_as_string.replace('.', ''))
+        self.criterias[-1].score = student_count
+
+        #
+        # Criteria: 'Anzahl Masterstudenten'
+        #
+        self.criterias.append(Criteria(
+            'Anteil Masterstudenten', self.name, importance=20, super_category='Universität'))
+        print(d.find_element(By.CSS_SELECTOR, 'td.checol2_rank').text)
+
+        # print(info)
 
     @classmethod
     def initialize_driver(cls):
         # initialize driver if not done yet
         if cls.driver == None:
             options = webdriver.FirefoxOptions()
-            if cls.USE_HEADLESS: options.add_argument('--headless')
+            if cls.USE_HEADLESS:
+                options.add_argument('--headless')
             cls.driver = webdriver.Firefox(options=options)
 
     @classmethod
@@ -60,9 +87,9 @@ class University:
         res = [University(uni_link.text, uni_link.get_attribute('href'))
                for uni_link in uni_links]
         return res
-    
+
     @classmethod
-    def destruct_driver(cls):
+    def destroy_driver(cls):
         cls.driver and cls.driver.close()
 
     def __repr__(self) -> str:
