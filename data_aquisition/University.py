@@ -1,5 +1,3 @@
-import Criteria
-import criterias.City as City
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -8,20 +6,19 @@ DRIVER_PATH = '/snap/bin/chromium.chromedriver'
 
 
 class University:
-    criterias = [City, City]
+    criterias = []
     driver = None
+    USE_HEADLESS = False
 
     def __init__(self, name, zeitOnlineLink='') -> None:
-        self.initializeDriver()
+        self.initialize_driver()
         self.name = name
         self.data = None
         self.zeitOnlineLink = zeitOnlineLink
         # self.fetchData()
 
     def fetchData(self):
-        self.data = []
-        for criteria in University.criterias:
-            self.data.append(criteria(self.name))
+        self.fetch_info_from_zeit()
 
     def evaluateScore(self):
         if self.data == None:
@@ -30,12 +27,21 @@ class University:
         for criteria in self.data:
             totalScore += criteria.getNormalizedScore()
 
+
+    def fetch_info_from_zeit(self):
+        d = self.driver
+        print(self.zeitOnlineLink)
+        d.get(url=self.zeitOnlineLink)
+        # get 'Studierende insgesamt'
+        info = d.find_element(By.XPATH, '*[text()="Studierende insgesamt"')
+        print(info)
+
     @classmethod
-    def initializeDriver(cls):
+    def initialize_driver(cls):
         # initialize driver if not done yet
         if cls.driver == None:
             options = webdriver.FirefoxOptions()
-            options.add_argument('--headless')
+            if cls.USE_HEADLESS: options.add_argument('--headless')
             cls.driver = webdriver.Firefox(options=options)
 
     @classmethod
@@ -43,8 +49,8 @@ class University:
         pass
 
     @classmethod
-    def getListOfAllUniverstities(cls):
-        return [cls.getListOfZeitRankingUniviersities()]
+    def get_list_of_all_universities(cls):
+        return cls.getListOfZeitRankingUniviersities()
 
     @classmethod
     def getListOfZeitRankingUniviersities(cls):
@@ -53,8 +59,11 @@ class University:
         uni_links = cls.driver.find_elements(By.CLASS_NAME, 'unis a')
         res = [University(uni_link.text, uni_link.get_attribute('href'))
                for uni_link in uni_links]
-        cls.driver.close()
         return res
+    
+    @classmethod
+    def destruct_driver(cls):
+        cls.driver and cls.driver.close()
 
     def __repr__(self) -> str:
         return self.name

@@ -1,8 +1,10 @@
 class Criteria:
 	allCriterias = []
 
-	def __init__(self, university_name, importance) -> None:
+	def __init__(self, criteria_name, university_name, importance, super_category='general') -> None:
+		self.criteria_name = criteria_name
 		self.university_name = university_name
+		self.super_category = super_category
 		# importance is subjective value from 1 - 10
 		self.importance = importance
 		self.score = None
