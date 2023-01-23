@@ -5,67 +5,93 @@ from weakref import WeakValueDictionary
 class Criteria:
     _registry = WeakValueDictionary()
     all_criterias: "dict[str, Criteria]" = {}
-    smallest_value: float = None
-    biggest_value: float = None
+    smallest_value: float = float('Inf')
+    biggest_value: float = - float('Inf')
     criteria_name: str
     super_category: str
     importance: int
+    is_smaller_score_better: bool
+    _sum_for_average: float = 0.0
+    _count_for_average: int = 0
+    average: float = 0.0
+    scoring_function: "callable[float, float]"
+    weight: float
 
-    def __new__(cls, criteria_name, importance=20, super_category='general'):
+    def __new__(cls, criteria_name, importance=20, super_category='general', is_smaller_score_better=True):
         if criteria_name in cls._registry:
             return cls._registry[criteria_name]
         instance = super().__new__(cls)
         cls._registry[criteria_name] = instance
         return instance
 
-    def __init__(self, criteria_name, importance=20, super_category='general') -> None:
+    def __init__(self, criteria_name, importance=20, super_category='general', is_smaller_score_better=True) -> None:
         self.all_criterias[criteria_name] = self
         self.criteria_name = criteria_name
         self.super_category = super_category
         # importance is subjective value from 1 - 100
         self.importance = importance
+        self.is_smaller_score_better = is_smaller_score_better
 
-        self.scoring_function = lambda x: (
-            x - self.worst_score) / (self.best_score - self.worst_score)
-
+        # scoring function maps normalized value (0 - 1) to new
+        self.scoring_function = lambda x: x
         # update weights
-        # Criteria.determineWeights()
-        # update the smallest and biggest value of all the given data in this criteria
-        # self.update_smallest_and_biggest_value(data_point)
+        Criteria.determineWeights()
 
-    def get_normalizedScore(self):
-        if self.score == None:
-            return self.scoring_function(self.get_average_score(self.criteria_name))
-        return self.scoring_function(self.score)
+    def calculate_weighted_score(self, data_point: DataPoint) -> float:
+        value = data_point.value
+        if value == None or type(value) != float:
+            value = self.average
+        normalized_value = (value - self.smallest_value) / \
+            (self.biggest_value - self.smallest_value)
+        data_point.normalized_value = normalized_value
+        if self.is_smaller_score_better:
+            normalized_value = 1 - normalized_value
+        return self.scoring_function(normalized_value) * self.weight
 
-    @classmethod
-    def get_average_score(cls, criteria_name):
-        total = 0.
-        count = 0
-        for criteria in Criteria.all_criterias[criteria_name]:
-            if criteria.score == None:
-                continue
-            total += criteria.score
-            count += 1
-        return total / count
+    def update_average_in_criteria(self, value: float):
+        if value != None and type(value) == float:
+            self._sum_for_average += value
+            self._count_for_average += 1
+            self.average = self._sum_for_average / self._count_for_average
+
+    def update_smallest_and_biggest_value(self, value: float):
+        if value == None or type(value) != float:
+            return
+        # if self.smallest_value == None:
+        #     self.smallest_value = data_point.value
+        self.smallest_value = min(
+            self.smallest_value, value)
+        # if self.biggest_value == None:
+        #     self.biggest_value = data_point.value
+        self.biggest_value = max(self.biggest_value, value)
 
     @classmethod
     def determineWeights(cls):
         sum_of_importance_scores = sum(
-            c.importance for c in Criteria.all_criterias)
-        for criteria in Criteria.all_criterias:
+            c.importance for c in Criteria.all_criterias.values())
+        for criteria in Criteria.all_criterias.values():
             criteria.weight = criteria.importance * 1.0 / sum_of_importance_scores
 
-    def update_smallest_and_biggest_value(self, data_point: DataPoint):
-        if data_point.value == None:
-            return
-        if Criteria.smallest_value == None:
-            Criteria.smallest_value = data_point.value
-        Criteria.smallest_value = min(
-            Criteria.smallest_value, data_point.value)
-        if Criteria.biggest_value == None:
-            Criteria.biggest_value = data_point.value
-        Criteria.biggest_value = max(Criteria.biggest_value, data_point.value)
+    def scoring_function(self, x):
+        return x
+
+    #
+    # to make sure json-pickle stores class variables too
+    #
+    def __getstate__(self):
+        ret = self.__dict__.copy()
+        ret['all_criterias'] = Criteria.all_criterias
+        return ret
+
+    def __setstate__(self, state):
+        Criteria.all_criterias = state.pop('all_criterias')
+        self.__dict__.update(state)
 
     def __repr__(self) -> str:
         return f'{self.score} ({self.worst_score} - {self.best_score})'
+
+
+if __name__ == '__main__':
+    criteria_1 = Criteria('Distanz zu Erfurt', 10, 'City')
+    criteria_2 = Criteria('Distanz zu Erfurt', 10, 'City')
+    criteria_3 = Criteria('Distanz zu Halle', 10, 'City')

@@ -3,13 +3,13 @@ from selenium.webdriver.common.by import By
 from data_aquisition.criteria import Criteria
 from data_aquisition.utils import extract_first_data_field_as_int
 from data_aquisition.data_point import DataPoint
-from prettytable import PrettyTable, SINGLE_BORDER
+from prettytable import PrettyTable, DOUBLE_BORDER
+import config
 
 DRIVER_PATH = '/snap/bin/chromium.chromedriver'
 
 
 class University:
-    USE_HEADLESS = False
     driver = None
     name: str
     score: float
@@ -31,8 +31,13 @@ class University:
     #
     # fetch the data from the internet
     #
+    @classmethod
+    def fetch_all_data(cls):
+        cls.get_list_of_all_universities()
+        for uni in cls.all_universities:
+            uni.fetch_data()
 
-    def fetchData(self):
+    def fetch_data(self):
         self.fetch_info_from_zeit()
 
     def fetch_info_from_zeit(self):
@@ -80,7 +85,7 @@ class University:
         # initialize driver if not done yet
         if cls.driver == None:
             options = webdriver.FirefoxOptions()
-            if cls.USE_HEADLESS:
+            if config.USE_HEADLESS:
                 options.add_argument('--headless')
             cls.driver = webdriver.Firefox(options=options)
             cls.set_consent_cookies()
@@ -126,21 +131,27 @@ class University:
     # do magic to find the score of the university -> describes how good the university is
     #
 
-    def evaluate_score(self):
+    @classmethod 
+    def calculate_scores(cls):
+        for uni in cls.all_universities:
+            uni.calculate_score()
+
+    def calculate_score(self):
         # if self.data == None:
         #     raise ValueError('The university data was not fetched properly')
         total_score = 0
-        for criteria in self.criterias:
-            total_score += criteria.get_normalizedScore()
+        for data_point in self.data:
+            total_score += data_point.calculate_score()
+        self.score = total_score
 
     #
     # functionality to print table 🤘
     #
     @ classmethod
-    def get_table_string(cls) -> str:
+    def get_table(cls) -> str:
         # order data by some criteria -> now it's name of the university, later it will be the score of the university
         table = PrettyTable()
-        table.set_style(SINGLE_BORDER)
+        table.set_style(DOUBLE_BORDER)
         # set headers -> names of universities
         field_names = ['Uni']
         field_names.extend(
@@ -150,10 +161,18 @@ class University:
         for university in cls.all_universities:
             table.add_row(university.get_row())
 
-        return table.get_string()
+        return table
+
+    @ classmethod
+    def get_table_string(cls) -> str:
+        return cls.get_table().get_string()
+
+    @ classmethod
+    def get_table_csv(cls) -> str:
+        return cls.get_table().get_csv_string()
 
     def get_row(self):
-        row = [self.name]
+        row = [f"{self.name}: {self.score}"]
         row.extend([i.value for i in self.data])
         return row
 
@@ -162,9 +181,13 @@ class University:
         for university in cls.all_universities:
             university.data = sorted(
                 university.data, key=lambda x: x.criteria.criteria_name)
+    
+    @classmethod
+    def sort_universities_by_score(cls):
+        University.all_universities = sorted(University.all_universities, key=lambda uni: uni.score)
 
     #
-    # damit json-pickle die Klassenvariablen auch speichert
+    # to make sure json-pickle stores class variables too
     #
 
     def __getstate__(self):
