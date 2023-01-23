@@ -1,6 +1,4 @@
-import sys
-sys.path.append('data_aquisition')
-from Criteria import Criteria
+from data_aquisition.criteria import Criteria
 import requests
 
 URL_ENDPOINT = 'https://maps.googleapis.com/maps/api/distancematrix'
