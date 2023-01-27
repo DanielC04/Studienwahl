@@ -1,18 +1,13 @@
+import sys
+sys.path.append('data_aquisition')
 from data.io import *
-from data_aquisition.criterias.city import DistanceToErfurt
 from data_aquisition.university import University
 from data_aquisition.criteria import Criteria
 import config
-import sys
-sys.path.append('data_aquisition')
-
 
 USE_CASH = config.USE_CASH
 if len(sys.argv) > 1 and sys.argv[1] == 'USE_CASH':
     USE_CASH = True
-
-
-USE_CASH = True
 
 
 
@@ -37,7 +32,5 @@ else:
 
     save_string_to_file(University.get_table_string(), 'data/table_output.txt')
     save_string_to_file(University.get_table_csv(), 'data/table_output.csv')
-
-
 
 # print(len(University.all_universities))
